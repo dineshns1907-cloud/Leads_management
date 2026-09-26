@@ -1,0 +1,39 @@
+<ng-container *ngIf="authService.isAuthenticated(); else unauthenticatedLayout">
+  <div class="app-layout" [class.sidebar-is-collapsed]="sidebarCollapsed()">
+    
+    <!-- Left Persistent Sidebar -->
+    <app-sidebar 
+      [collapsed]="sidebarCollapsed()" 
+      (collapsedChange)="toggleSidebar($event)"
+    ></app-sidebar>
+
+    <!-- Right App Main Container -->
+    <div class="app-main-container">
+      
+      <!-- Top Persistent Header -->
+      <app-header 
+        (addLeadRequested)="openAddLeadModal()"
+      ></app-header>
+
+      <!-- Scrollable Main Content Area -->
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+
+    <!-- Global Toast Notifications -->
+    <app-toast></app-toast>
+
+    <!-- Global Add Lead Modal -->
+    <app-add-lead-modal 
+      *ngIf="showAddLeadModal()" 
+      (closed)="closeAddLeadModal()"
+    ></app-add-lead-modal>
+
+  </div>
+</ng-container>
+
+<ng-template #unauthenticatedLayout>
+  <router-outlet></router-outlet>
+  <app-toast></app-toast>
+</ng-template>
