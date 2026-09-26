@@ -6,7 +6,7 @@ from app.models.pipeline import (
     EngagementLevel
 )
 from app.models.user import User, UserRole
-from app.models.lead import Lead
+from app.models.lead import Lead, LeadSequence
 from app.models.activity import Activity, ActivityType
 from app.models.note import Note
 from app.models.quotation import Quotation
@@ -25,6 +25,7 @@ __all__ = [
     "User",
     "UserRole",
     "Lead",
+    "LeadSequence",
     "Activity",
     "ActivityType",
     "Note",

@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, desc, asc, text
 from fastapi import HTTPException, status
-from app.models.lead import Lead
+from app.models.lead import Lead, LeadSequence
 from app.models.pipeline import PipelineStage, LeadStatus
 from app.models.activity import Activity, ActivityType
 from app.models.pipeline_history import PipelineHistory
@@ -284,9 +284,15 @@ class LeadService:
         deal_val = float(lead_in.expected_investment if lead_in.expected_investment is not None and lead_in.expected_investment > 0 else lead_in.estimated_value)
 
         # Generate atomic unique public Lead ID (e.g. LEAD-000001, LEAD-000002)
-        seq_res = db.execute(text("INSERT INTO lead_sequences (created_at) VALUES (NOW())"))
-        seq_id = seq_res.lastrowid
-        public_lead_id = f"LEAD-{seq_id:06d}"
+        try:
+            seq = LeadSequence()
+            db.add(seq)
+            db.flush()
+            seq_id = seq.id
+            public_lead_id = f"LEAD-{seq_id:06d}"
+        except Exception:
+            count = db.query(Lead).count() + 1
+            public_lead_id = f"LEAD-{count:06d}"
 
         lead = Lead(
             public_lead_id=public_lead_id,

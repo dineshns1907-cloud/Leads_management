@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Index
+from sqlalchemy import Column, String, Float, Integer, DateTime, ForeignKey, Index
 from sqlalchemy.orm import relationship
 from app.database.base import Base
 from app.models.pipeline import PipelineStage, LeadStatus
@@ -59,3 +59,10 @@ class Lead(Base):
             return 0
         delta = datetime.now(timezone.utc) - self.created_at.replace(tzinfo=timezone.utc if self.created_at.tzinfo is None else self.created_at.tzinfo)
         return max(0, delta.days)
+
+
+class LeadSequence(Base):
+    __tablename__ = "lead_sequences"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)

@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Optional
 from pydantic_settings import BaseSettings
 from pydantic import Field
 
@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "LeadIQ — AI Sales Intelligence"
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api"
+
+    # Database URL (Supports Supabase / PostgreSQL / MySQL / SQLite directly)
+    DATABASE_URL: Optional[str] = Field(default=None)
 
     # MySQL Configuration
     DB_HOST: str = Field(default="localhost")
